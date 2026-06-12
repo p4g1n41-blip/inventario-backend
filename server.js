@@ -8,12 +8,21 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Página principal
+app.get('/', (req, res) => {
+  res.send(`
+    <h1>Inventario Backend</h1>
+    <p>Servidor funcionando correctamente 🚀</p>
+    <p>MongoDB Atlas conectado ✅</p>
+  `);
+});
+
 // Conexión a MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Conexión exitosa a MongoDB Atlas"))
   .catch(err => console.error("❌ Error de conexión:", err));
 
-// Esquema
+// Esquema de productos
 const ProductoSchema = new mongoose.Schema({
   nombre: String,
   precio: Number,
@@ -32,6 +41,7 @@ app.get('/productos', async (req, res) => {
 app.post('/productos', async (req, res) => {
   const nuevoProducto = new Producto(req.body);
   await nuevoProducto.save();
+
   res.json({
     mensaje: "Producto registrado",
     nuevoProducto
