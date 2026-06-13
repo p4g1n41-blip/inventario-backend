@@ -17,15 +17,19 @@ const Producto = mongoose.model('Producto', new mongoose.Schema({
   existencia: Number
 }));
 
-// Rutas con prefijo /api/productos
-app.get('/api/productos', async (req, res) => {
-  res.json(await Producto.find());
-});
+// Rutas
+app.get('/api/productos', async (req, res) => res.json(await Producto.find()));
 
 app.post('/api/productos', async (req, res) => {
   const nuevo = new Producto(req.body);
   await nuevo.save();
   res.json(nuevo);
+});
+
+// NUEVA RUTA PARA ACTUALIZAR
+app.put('/api/productos/:id', async (req, res) => {
+  await Producto.findByIdAndUpdate(req.params.id, req.body);
+  res.json({ mensaje: "Actualizado" });
 });
 
 app.delete('/api/productos/:id', async (req, res) => {
